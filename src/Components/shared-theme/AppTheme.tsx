@@ -1,56 +1,65 @@
-import * as React from 'react';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import type { ThemeOptions } from '@mui/material/styles';
-import { inputsCustomizations } from './customizations/inputs';
-import { dataDisplayCustomizations } from './customizations/dataDisplay';
-import { feedbackCustomizations } from './customizations/feedback';
-import { navigationCustomizations } from './customizations/navigation';
-import { surfacesCustomizations } from './customizations/surfaces';
-import { colorSchemes, typography, shadows, shape } from './themePrimitives';
+import React from "react";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
 
-interface AppThemeProps {
-  children: React.ReactNode;
-  /**
-   * This is for the docs site. You can ignore it or remove it.
-   */
-  disableCustomTheme?: boolean;
-  themeComponents?: ThemeOptions['components'];
-}
+const colors = {
+  primary: {
+    main: "#207FB8", // Medium Blue
+    contrastText: "#ffffff", // White for text on primary
+  },
+  secondary: {
+    main: "#89FFD6", // Mint Green
+    contrastText: "#000000", // Black for text on secondary
+  },
+  background: {
+    default: "#ffffff", // Light Blue for light mode
+    paper: "#ffffff", // White for light mode paper
+  },
+  text: {
+    primary: "#154472", // Dark Blue for primary text
+    secondary: "#6b7280", // Tailwind gray-600 for secondary text
+  },
+};
 
-export default function AppTheme({
-  children,
-  disableCustomTheme,
-  themeComponents,
-}: AppThemeProps) {
-  const theme = React.useMemo(() => {
-    return disableCustomTheme
-      ? {}
-      : createTheme({
-          // For more details about CSS variables configuration, see https://mui.com/material-ui/customization/css-theme-variables/configuration/
-          cssVariables: {
-            colorSchemeSelector: 'data-mui-color-scheme',
-            cssVarPrefix: 'template',
+const AppTheme = ({ children }) => {
+  const theme = createTheme({
+    palette: {
+      ...colors,
+    },
+    typography: {
+      fontFamily:
+        "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif",
+      h4: {
+        fontSize: "2.15rem",
+      },
+      button: {
+        textTransform: "none",
+        fontWeight: "600",
+      },
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "#72E0D4", // Mint Green background for buttons
+            color: colors.secondary.contrastText, // Black text color for mint green
+            borderRadius: "0.5rem",
+            padding: "0.75rem 1.5rem",
+            "&:hover": {
+              backgroundColor: "#63C8C1", // Darker shade of mint green for hover
+            },
           },
-          colorSchemes, // Recently added in v6 for building light & dark mode app, see https://mui.com/material-ui/customization/palette/#color-schemes
-          typography,
-          shadows,
-          shape,
-          components: {
-            ...inputsCustomizations,
-            ...dataDisplayCustomizations,
-            ...feedbackCustomizations,
-            ...navigationCustomizations,
-            ...surfacesCustomizations,
-            ...themeComponents,
-          },
-        });
-  }, [disableCustomTheme, themeComponents]);
-  if (disableCustomTheme) {
-    return <React.Fragment>{children}</React.Fragment>;
-  }
+        },
+      },
+    },
+  });
+
   return (
-    <ThemeProvider theme={theme} disableTransitionOnChange>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       {children}
     </ThemeProvider>
   );
-}
+};
+
+export default AppTheme;

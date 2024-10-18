@@ -7,13 +7,13 @@ function LandingPage() {
     <>
       <NavBar />
       <div className="landing-page mt-4">
-        <header className="landing-header flex items-center justify-between h-[80vh]">
-          <div className="right flex flex-col items-start pl-8">
-            <h1 className="text-6xl font-bold mb-4 text-dark-blue">
+        <header className="landing-header flex items-center justify-between md:h-[80vh] flex-col-reverse md:flex-row">
+          <div className="right flex flex-col items-start space-y-4  pt-10 md:pt-0 px-2 md:pl-8">
+            <h1 className="text-3xl md:text-6xl font-bold mb-4 text-dark-blue">
               Revolutionize Your Corporate Financial Health
             </h1>
 
-            <p className="text-lg mb-8 text-medium-blue">
+            <p className="text-md md:text-lg mb-8 text-medium-blue">
               Empower your organization with real-time financial insights,
               efficient expense tracking, and automated reporting to drive
               strategic growth and operational efficiency.
@@ -26,7 +26,7 @@ function LandingPage() {
               Get Started
             </a>
           </div>
-          <div className="left w-[60vw] ">
+          <div className="left w-[100vw] md:w-[60vw] ">
             <img
               src="/left_landing2.png"
               alt="left_landing"
