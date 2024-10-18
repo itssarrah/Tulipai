@@ -8,6 +8,8 @@ import Dashboard from "./Components/Dashboard/Dashboard.tsx";
 import SignIn from "./Components/LogIn/SignIn.tsx";
 import { CssBaseline } from "@mui/material";
 import AppTheme from "./Components/shared-theme/AppTheme.tsx";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toast notifications
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </AppTheme>
+      <ToastContainer />
     </Router>
   );
 }

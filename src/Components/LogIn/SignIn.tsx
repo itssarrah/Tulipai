@@ -13,6 +13,7 @@ import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import ForgotPassword from "./ForgotPassword.tsx";
+import { toast } from "react-toastify"; // Import the toast function
 
 import AppTheme from "../shared-theme/AppTheme";
 
@@ -75,18 +76,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
-      return;
-    }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
-
   const validateInputs = () => {
     const email = document.getElementById("email") as HTMLInputElement;
     const password = document.getElementById("password") as HTMLInputElement;
@@ -112,6 +101,54 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     }
 
     return isValid;
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // Prevent default form submission behavior
+
+    // Validate inputs
+    if (!validateInputs()) return;
+
+    const data = new FormData(event.currentTarget);
+    const email = data.get("email");
+    const password = data.get("password");
+
+    try {
+      // Make POST request to the Laravel backend
+      const response = await fetch("http://localhost:8000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }), // Convert form data to JSON
+      });
+
+      // Check if the response is ok (status code 200-299)
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Login failed");
+      }
+
+      const responseData = await response.json();
+
+      // Store the token in local storage
+      localStorage.setItem("token", responseData.token);
+
+      // Show success toast message
+      toast.success("Login successful!", { autoClose: 3000 });
+
+      // Redirect to the dashboard after 3 seconds
+      setTimeout(() => {
+        window.location.href = "/dashboard"; // Redirect to the dashboard
+      }, 3000);
+    } catch (error) {
+      // Handle errors (e.g., show a notification or alert)
+      console.error("Error during login:", error.message);
+      setEmailError(true);
+      setPasswordError(true);
+      setEmailErrorMessage("Invalid email or password.");
+      setPasswordErrorMessage("Invalid email or password.");
+    }
   };
 
   return (
