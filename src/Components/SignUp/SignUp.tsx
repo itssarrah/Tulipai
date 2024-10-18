@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react"; // Import useEffect
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,6 +17,10 @@ import {
   PaletteMode,
 } from "@mui/material/styles";
 import NavBar from "../NavBar";
+
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -42,24 +46,45 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignUp() {
-  const [step, setStep] = React.useState(0);
-  const [mode, setMode] = React.useState<PaletteMode>("light");
-  const [userDetails, setUserDetails] = React.useState({
+  const [step, setStep] = useState(0);
+  const [mode, setMode] = useState<PaletteMode>("light");
+  const [userDetails, setUserDetails] = useState({
     name: "",
     email: "",
     password: "",
   });
-  const [orgDetails, setOrgDetails] = React.useState({
+  const [orgDetails, setOrgDetails] = useState({
     orgName: "",
     category: "",
     description: "",
   });
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState("");
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState("");
-  const [passwordError, setPasswordError] = React.useState(false);
-  const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
+  const [categories, setCategories] = useState([]); // State for categories
+  const [nameError, setNameError] = useState(false);
+  const [nameErrorMessage, setNameErrorMessage] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const navigate = useNavigate(); // Initialize useNavigate
+
+  useEffect(() => {
+    // Fetch categories from the API
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:8000/api/categories");
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(data); // Assuming the API returns an array of categories
+        } else {
+          console.error("Error fetching categories");
+        }
+      } catch (error) {
+        console.error("Network error: ", error);
+      }
+    };
+
+    fetchCategories();
+  }, []); // Empty dependency array to run only once on mount
 
   const validateInputs = () => {
     const email = document.getElementById("email") as HTMLInputElement;
@@ -110,161 +135,211 @@ export default function SignUp() {
     }
   };
 
-  const handleOrgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOrgChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     const { name, value } = e.target;
-    setOrgDetails({ ...orgDetails, [name]: value });
+    if (name === "category") {
+      // Store the category ID directly
+      setOrgDetails({ ...orgDetails, [name]: value }); // value is the category ID
+    } else {
+      setOrgDetails({ ...orgDetails, [name]: value });
+    }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (step === 0) {
-      // Validate user details only on the first step
       if (validateInputs()) {
-        setStep(1); // Move to the next step if valid
+        setStep(1);
       }
     } else if (step === 1) {
-      // Final submission logic here
-      console.log("Final Submission: ", { userDetails, orgDetails });
+      const submissionData = {
+        user: userDetails,
+        organization: orgDetails,
+      };
+
+      try {
+        const response = await fetch("http://localhost:8000/api/managers", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(submissionData),
+        });
+
+        if (response.ok) {
+          toast.success("Sign up successful!", { autoClose: 3000 }); // Show success toast
+          setTimeout(() => {
+            navigate("/login"); // Navigate to login page after 3 seconds
+          }, 3000);
+        } else {
+          // Handle error (e.g., show an error toast)
+          toast.error("Sign up failed. Please try again.");
+        }
+      } catch (error) {
+        console.error("Network error: ", error);
+        toast.error("An error occurred. Please try again."); // Handle network error
+      }
     }
   };
 
   return (
     <>
       <NavBar />
-      <ThemeProvider theme={createTheme({ palette: { mode } })}>
-        <CssBaseline enableColorScheme />
-        <SignUpContainer direction="column" justifyContent="space-between">
-          <Card variant="outlined">
-            <img src="/logo.png" alt="logo" className="w-[5vw]" />
-            <Typography
-              component="h1"
-              variant="h4"
-              sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
-            >
-              {step === 0 ? "Sign up" : "Organization Details"}
-            </Typography>
-            <Box
-              component="form"
-              onSubmit={handleSubmit}
-              sx={{ display: "flex", flexDirection: "column", gap: 2 }}
-            >
-              {step === 0 && (
-                <>
-                  <FormControl>
-                    <FormLabel htmlFor="name">Full name</FormLabel>
-                    <TextField
-                      autoComplete="name"
-                      name="name"
-                      required
-                      fullWidth
-                      id="name"
-                      placeholder="Sarra Arab"
-                      error={nameError}
-                      helperText={nameErrorMessage}
-                      color={nameError ? "error" : "primary"}
-                      onChange={handleUserChange}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel htmlFor="email">Email</FormLabel>
-                    <TextField
-                      required
-                      fullWidth
-                      id="email"
-                      placeholder="your@email.com"
-                      name="email"
-                      autoComplete="email"
-                      variant="outlined"
-                      error={emailError}
-                      helperText={emailErrorMessage}
-                      color={emailError ? "error" : "primary"}
-                      onChange={handleUserChange}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel htmlFor="password">Password</FormLabel>
-                    <TextField
-                      required
-                      fullWidth
-                      name="password"
-                      placeholder="••••••"
-                      type="password"
-                      id="password"
-                      autoComplete="new-password"
-                      variant="outlined"
-                      error={passwordError}
-                      helperText={passwordErrorMessage}
-                      color={passwordError ? "error" : "primary"}
-                      onChange={handleUserChange}
-                    />
-                  </FormControl>
-                </>
-              )}
-              {step === 1 && (
-                <>
-                  <FormControl>
-                    <FormLabel htmlFor="orgName">Organization Name</FormLabel>
-                    <TextField
-                      required
-                      fullWidth
-                      id="orgName"
-                      name="orgName"
-                      placeholder="Your Organization Name"
-                      onChange={handleOrgChange}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel htmlFor="category">Category</FormLabel>
-                    <TextField
-                      required
-                      fullWidth
-                      id="category"
+
+      <CssBaseline enableColorScheme />
+      <SignUpContainer direction="column" justifyContent="space-between">
+        <Card variant="outlined">
+          <img src="/logo.png" alt="logo" className="w-[5vw]" />
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
+          >
+            {step === 0 ? "Sign up" : "Organization Details"}
+          </Typography>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+          >
+            {step === 0 && (
+              <>
+                <FormControl>
+                  <FormLabel htmlFor="name">Full name</FormLabel>
+                  <TextField
+                    autoComplete="name"
+                    name="name"
+                    required
+                    fullWidth
+                    id="name"
+                    placeholder="Sarra Arab"
+                    error={nameError}
+                    helperText={nameErrorMessage}
+                    color={nameError ? "error" : "primary"}
+                    onChange={handleUserChange}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="email">Email</FormLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    id="email"
+                    placeholder="your@email.com"
+                    name="email"
+                    autoComplete="email"
+                    variant="outlined"
+                    error={emailError}
+                    helperText={emailErrorMessage}
+                    color={emailError ? "error" : "primary"}
+                    onChange={handleUserChange}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="password">Password</FormLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    placeholder="********"
+                    error={passwordError}
+                    helperText={passwordErrorMessage}
+                    color={passwordError ? "error" : "primary"}
+                    onChange={handleUserChange}
+                  />
+                </FormControl>
+              </>
+            )}
+            {step === 1 && (
+              <>
+                <FormControl>
+                  <FormLabel htmlFor="orgName">Organization Name</FormLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="orgName"
+                    id="orgName"
+                    placeholder="Organization Name"
+                    onChange={handleOrgChange}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="category">Category</FormLabel>
+                  <div style={{ position: "relative", width: "100%" }}>
+                    <select
                       name="category"
-                      placeholder="Business Category"
-                      onChange={handleOrgChange}
-                    />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel htmlFor="description">Description</FormLabel>
-                    <TextField
+                      id="category"
                       required
-                      fullWidth
-                      id="description"
-                      name="description"
-                      placeholder="Brief description of your organization"
                       onChange={handleOrgChange}
-                    />
-                  </FormControl>
-                </>
-              )}
-              <Stack direction="row" justifyContent="space-between">
-                <Button
-                  type="button"
-                  onClick={() => setStep(step > 0 ? step - 1 : 0)}
-                >
-                  Back
-                </Button>
-                <Button type="submit" variant="contained">
-                  {step === 1 ? "Submit" : "Next"}
-                </Button>
-              </Stack>
-            </Box>
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Typography variant="body2">
-                Already have an account?{" "}
-                <Link href="#" variant="subtitle2">
-                  Sign in
-                </Link>
-              </Typography>
-            </Box>
-          </Card>
-        </SignUpContainer>
-      </ThemeProvider>
+                      style={{
+                        width: "100%",
+                        height: "56px",
+                        border: "1px solid #1976d2",
+                        borderRadius: "4px",
+                        padding: "10px",
+                        fontSize: "16px",
+                        outline: "none",
+                        backgroundColor: "#fff",
+                        appearance: "none",
+                        paddingRight: "30px",
+                      }}
+                    >
+                      <option value="">Select a category</option>
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Chevron Icon */}
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        right: "10px", // Position the chevron icon
+                        transform: "translateY(-50%)", // Center the chevron vertically
+                        pointerEvents: "none", // Prevent pointer events on the chevron
+                        color: "#1976d2", // Chevron color
+                      }}
+                    >
+                      &#9662; {/* Unicode for down chevron */}
+                    </span>
+                  </div>
+                </FormControl>
+                <FormControl>
+                  <FormLabel htmlFor="description">Description</FormLabel>
+                  <TextField
+                    required
+                    fullWidth
+                    name="description"
+                    id="description"
+                    placeholder="Organization Description"
+                    multiline
+                    rows={4}
+                    onChange={handleOrgChange}
+                  />
+                </FormControl>
+              </>
+            )}
+            <Button type="submit" variant="contained">
+              {step === 0 ? "Next" : "Submit"}
+            </Button>
+            <Link href="/login" variant="body2" alignSelf="flex-end">
+              Already have an account? Log in
+            </Link>
+          </Box>
+        </Card>
+      </SignUpContainer>
+      <ToastContainer />
     </>
   );
 }
