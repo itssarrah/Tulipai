@@ -1,19 +1,39 @@
 // src/Components/Dashboard/DashboardLayout.tsx
-import React from "react";
+import React, { useState } from "react";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import SideMenu from "./components/SideMenu"; // Desktop Sidebar
+import Header from "./components/Header"; // Header
+import SideMenuMobile from "./components/SideMenuMobile"; // Mobile Sidebar
 
-import SideMenu from "./components/SideMenu";
-import Header from "./components/Header";
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Toggle mobile menu drawer
+  const toggleMobileMenu = (open: boolean) => () => {
+    setMobileMenuOpen(open);
+  };
+
+  // Check if the screen size is mobile
+  const isMobile = useMediaQuery("(max-width: 768px)");
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <SideMenu />
 
+      {/* Desktop Sidebar */}
+      {!isMobile && <SideMenu />}
+
+      {/* Mobile Sidebar */}
+      {isMobile && (
+        <SideMenuMobile open={mobileMenuOpen} toggleDrawer={toggleMobileMenu} />
+      )}
+
+      {/* Main Content Area */}
       <Box
         component="main"
         sx={(theme) => ({
@@ -33,7 +53,7 @@ const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
             mt: { xs: 8, md: 0 },
           }}
         >
-          <Header />
+          <Header toggleMobileMenu={toggleMobileMenu} /> {/* Pass down the toggle function */}
           {children}
         </Stack>
       </Box>

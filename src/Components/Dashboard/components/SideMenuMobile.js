@@ -14,6 +14,39 @@ import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 
 function SideMenuMobile({ open, toggleDrawer }) {
+  const [userData, setUserData] = React.useState({ email: "", avatar: "", role: "" });
+
+  // Fetch user data from backend
+  React.useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        // Get the token from local storage or any other secure storage
+        const token = localStorage.getItem("token");
+        const response = await fetch("http://localhost:8000/api/user-profile", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Send token in header for auth
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user data");
+        }
+
+        const data = await response.json();
+        setUserData({
+          email: data.email || "user@gmail.com", // Default email if not provided
+          avatar: data.avatar || "/default-avatar.png", // Default avatar if not provided
+          role: data.role || "employee", // Fallback role
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
   return (
     <Drawer
       anchor="right"
@@ -22,7 +55,7 @@ function SideMenuMobile({ open, toggleDrawer }) {
       sx={{
         [`& .${drawerClasses.paper}`]: {
           backgroundImage: 'none',
-          backgroundColor: '#0000',
+          backgroundColor: '#154472',
         },
       }}
     >
@@ -32,6 +65,7 @@ function SideMenuMobile({ open, toggleDrawer }) {
           height: '100%',
         }}
       >
+        {/* User Info */}
         <Stack direction="row" sx={{ p: 2, pb: 0, gap: 1 }}>
           <Stack
             direction="row"
@@ -39,29 +73,35 @@ function SideMenuMobile({ open, toggleDrawer }) {
           >
             <Avatar
               sizes="small"
-              alt="Riley Carter"
-              src="/static/images/avatar/7.jpg"
-              sx={{ width: 24, height: 24 }}
+              alt="User"
+              src={userData.avatar || "/static/images/avatar/7.jpg"}
+              sx={{ width: 36, height: 36 }}
             />
-            <Typography component="p" variant="h6">
-              User
+            <Typography component="p" variant="h6" sx={{ color: "#ffffff" }}>
+              {userData.email} {/* Display the user's email */}
             </Typography>
+
           </Stack>
           <MenuButton showBadge>
             <NotificationsRoundedIcon />
           </MenuButton>
         </Stack>
         <Divider />
+        {/* Menu Content */}
         <Stack sx={{ flexGrow: 1 }}>
           <MenuContent />
           <Divider />
         </Stack>
-        <CardAlert />
-        <Stack sx={{ p: 2 }}>
+        {/* User Role and Logout */}
+        <Stack sx={{ p: 2, gap: 1 }}>
+          <Typography variant="caption" sx={{ color: "#ffffff" }}>
+            {userData.role === "manager" ? "Manager" : "Employee"} {/* Role display */}
+          </Typography>
           <Button variant="outlined" fullWidth startIcon={<LogoutRoundedIcon />}>
             Logout
           </Button>
         </Stack>
+
       </Stack>
     </Drawer>
   );
