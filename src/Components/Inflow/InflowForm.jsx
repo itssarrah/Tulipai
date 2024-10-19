@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { toast } from "react-toastify"; // Import toast
 import { Button, TextField, MenuItem } from "@mui/material";
 
 const InflowForm = ({ onSubmit }) => {
@@ -10,20 +12,56 @@ const InflowForm = ({ onSubmit }) => {
     description: "",
   });
 
+  const [categories, setCategories] = useState([]); // State to store categories
+
+  // Fetch categories when the component mounts
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/inflow-categories"
+        );
+        setCategories(response.data); // Set categories from API response
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        toast.error("Failed to fetch categories."); // Optionally, you can add an error toast
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const handleChange = (e) => {
     setInflow({ ...inflow, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(inflow);
-    setInflow({
-      name: "",
-      category: "",
-      amount: "",
-      date: "",
-      description: "",
-    });
+    const token = localStorage.getItem("token"); // Get token from localStorage
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/inflow",
+        inflow,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      onSubmit(inflow); // Notify parent component
+      setInflow({
+        name: "",
+        category: "",
+        amount: "",
+        date: "",
+        description: "",
+      });
+      toast.success("Inflow added successfully!"); // Add this line
+    } catch (error) {
+      console.error("Error adding inflow:", error);
+      toast.error("Failed to add inflow."); // Optionally, you can add an error toast
+    }
   };
 
   return (
@@ -46,9 +84,12 @@ const InflowForm = ({ onSubmit }) => {
           fullWidth
           select
         >
-          <MenuItem value="Sales">Sales</MenuItem>
-          <MenuItem value="Investment">Investment</MenuItem>
-          <MenuItem value="Other">Other</MenuItem>
+          <MenuItem value="">Select Category</MenuItem>
+          {categories.map((cat) => (
+            <MenuItem key={cat.id} value={cat.name}>
+              {cat.name}
+            </MenuItem>
+          ))}
         </TextField>
         <TextField
           label="Amount"
