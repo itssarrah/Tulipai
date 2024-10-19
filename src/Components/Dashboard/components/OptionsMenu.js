@@ -28,8 +28,7 @@ export default function OptionsMenu() {
     setAnchorEl(null);
   };
 
-  // Get account type from local storage
-  const accountType = localStorage.getItem("account_type"); // Assuming 'account_type' is the key in local storage
+  const accountType = localStorage.getItem("account_type"); 
 
   return (
     <React.Fragment>

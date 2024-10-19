@@ -24,43 +24,23 @@ import { useTheme } from '@mui/material/styles';
 const ITEMS = [
   {
     id: '1',
-    label: 'Website',
+    label: 'category 01',
     children: [
-      { id: '1.1', label: 'Home', color: 'green' },
-      { id: '1.2', label: 'Pricing', color: 'green' },
-      { id: '1.3', label: 'About us', color: 'green' },
+      { id: '1.1', label: 'product01', color: 'green' },
+      { id: '1.2', label: 'product02', color: 'green' },
+      { id: '1.3', label: 'product03', color: 'green' },
       {
         id: '1.4',
-        label: 'Blog',
+        label: 'category02',
         children: [
-          { id: '1.1.1', label: 'Announcements', color: 'blue' },
-          { id: '1.1.2', label: 'April lookahead', color: 'blue' },
-          { id: '1.1.3', label: "What's new", color: 'blue' },
-          { id: '1.1.4', label: 'Meet the team', color: 'blue' },
+          { id: '1.1.1', label: 'product01', color: 'blue' },
+          { id: '1.1.2', label: 'producr02', color: 'blue' },
+          { id: '1.1.3', label: "product03", color: 'blue' },
+          { id: '1.1.4', label: 'product04', color: 'blue' },
         ],
       },
     ],
   },
-  {
-    id: '2',
-    label: 'Store',
-    children: [
-      { id: '2.1', label: 'All products', color: 'green' },
-      {
-        id: '2.2',
-        label: 'Categories',
-        children: [
-          { id: '2.2.1', label: 'Gadgets', color: 'blue' },
-          { id: '2.2.2', label: 'Phones', color: 'blue' },
-          { id: '2.2.3', label: 'Wearables', color: 'blue' },
-        ],
-      },
-      { id: '2.3', label: 'Bestsellers', color: 'green' },
-      { id: '2.4', label: 'Sales', color: 'green' },
-    ],
-  },
-  { id: '4', label: 'Contact', color: 'blue' },
-  { id: '5', label: 'Help', color: 'blue' },
 ];
 
 function DotIcon({ color }) {
@@ -196,7 +176,7 @@ CustomTreeItem.propTypes = {
   label: PropTypes.node,
 };
 
-export default function CustomizedTreeView() {
+export default function TopProducts() {
   return (
     <Card
       variant="outlined"
