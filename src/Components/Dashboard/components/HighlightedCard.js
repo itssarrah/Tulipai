@@ -25,12 +25,12 @@ export default function HighlightedCard() {
           Explore your data
         </Typography>
         <Typography sx={{ color: 'text.secondary', mb: '8px' }}>
-          Uncover performance and visitor insights with our data wizardry.
+          Uncover performance and visitor insights .
         </Typography>
         <Button
           variant="contained"
           size="small"
-          color="primary"
+          color="#89FFD6"
           endIcon={<ChevronRightRoundedIcon />}
           fullWidth={isSmallScreen}
         >

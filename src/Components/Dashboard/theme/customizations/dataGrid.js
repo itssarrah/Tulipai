@@ -28,7 +28,7 @@ export const dataGridCustomizations = {
         [`& .${checkboxClasses.root}`]: {
           padding: theme.spacing(0.5),
           '& > svg': {
-            fontSize: '1rem',
+            fontSize: '3.15rem',
           },
         },
         [`& .${tablePaginationClasses.root}`]: {
@@ -37,7 +37,7 @@ export const dataGridCustomizations = {
             maxHeight: 32,
             maxWidth: 32,
             '& > svg': {
-              fontSize: '1rem',
+              fontSize: '3.15rem',
             },
           },
         },

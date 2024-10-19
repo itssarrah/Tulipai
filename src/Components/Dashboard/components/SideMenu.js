@@ -6,9 +6,8 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import SelectContent from './SelectContent';
 import MenuContent from './MenuContent';
-import CardAlert from './CardAlert';
+
 import OptionsMenu from './OptionsMenu';
 
 const drawerWidth = 240;
@@ -31,7 +30,7 @@ export default function SideMenu() {
       sx={{
         display: { xs: 'none', md: 'block' },
         [`& .${drawerClasses.paper}`]: {
-          backgroundColor: 'background.paper',
+          backgroundColor: '#154472',
         },
       }}
     >
@@ -42,11 +41,11 @@ export default function SideMenu() {
           p: 1.5,
         }}
       >
-        <SelectContent />
+
       </Box>
       <Divider />
       <MenuContent />
-      <CardAlert />
+      
       <Stack
         direction="row"
         sx={{
@@ -59,16 +58,16 @@ export default function SideMenu() {
       >
         <Avatar
           sizes="small"
-          alt="Riley Carter"
+          alt="User"
           src="/static/images/avatar/7.jpg"
           sx={{ width: 36, height: 36 }}
         />
         <Box sx={{ mr: 'auto' }}>
-          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Riley Carter
+          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px', color: '#ffffff' }}>
+            User
           </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
+          <Typography variant="caption" sx={{ color: '#ffffff' }}>
+            user@gmail.com
           </Typography>
         </Box>
         <OptionsMenu />

@@ -22,7 +22,7 @@ function SideMenuMobile({ open, toggleDrawer }) {
       sx={{
         [`& .${drawerClasses.paper}`]: {
           backgroundImage: 'none',
-          backgroundColor: 'background.paper',
+          backgroundColor: '#154472',
         },
       }}
     >
@@ -44,7 +44,7 @@ function SideMenuMobile({ open, toggleDrawer }) {
               sx={{ width: 24, height: 24 }}
             />
             <Typography component="p" variant="h6">
-              Riley Carter
+              User
             </Typography>
           </Stack>
           <MenuButton showBadge>
