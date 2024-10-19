@@ -1,14 +1,16 @@
 import * as React from 'react';
 import Grid from '@mui/material/Grid2';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import ChartUserByCountry from './ChartUserByCountry';
-import CustomizedTreeView from './CustomizedTreeView';
-import CustomizedDataGrid from './CustomizedDataGrid';
+import TopUsers from './Profit/BestCustomer';
+import TopProducts from './Profit/BestProduct';
 import HighlightedCard from './HighlightedCard';
-import PageViewsBarChart from './PageViewsBarChart';
-import SessionsChart from './SessionsChart';
+import InflowBySourceChart from './CashFlow/InflowBySource.js';
+import InflowOutFlowLineChart from './CashFlow/InflowOutflowLineChart';
+import ProfitChart from './Profit/profitlinechart';
+import ExpenseRank from './expenses/expensesrank';
+import ExpenseLine from './expenses/expenseslinechart';
+
 import StatCard from './StatCard';
 
 const data = [
@@ -53,35 +55,42 @@ export default function MainGrid() {
       </Typography>
       <Grid container spacing={2} columns={2}>
         <Grid size={{ md: 1, lg: 1 }}>
-          <SessionsChart />
+          <InflowOutFlowLineChart />
         </Grid>
         <Grid size={{ md: 1, lg: 1 }}>
-          <PageViewsBarChart />
+          <InflowBySourceChart/>
         </Grid>
       </Grid>
 
       <Typography component="h2" variant="h6" sx={{ mb: 2, fontSize: '30px' }}>
         Profit
       </Typography>
-      <Grid container spacing={20} columns={2}>
+      <Grid container spacing={20} columns={3}>
         <Grid size={{ md: 1, lg: 1 }}>
-          <SessionsChart />
+          <ProfitChart/>
         </Grid>
-        <Grid container spacing={20} columns={12} sx={{ mb: (theme) => theme.spacing(2) }}>
-        <HighlightedCard />
-        <HighlightedCard />
+        <Grid size={{ md: 1, lg: 1 }}>
+        <TopUsers/>
+        </Grid><Grid size={{ md: 1, lg: 1 }}>
+        <TopProducts />
         </Grid>
-      </Grid>
 
+      <Typography component="h2" variant="h6" sx={{ mb: 2, fontSize: '30px' }}>
+       
+      </Typography>
+      <Grid container spacing={25} columns={3}>
+      </Grid>
+        
+      </Grid>
       <Typography component="h2" variant="h6" sx={{ mb: 2, fontSize: '30px' }}>
         Expenses
       </Typography>
         <Grid container spacing={2} columns={2}>
         <Grid size={{ md: 1, lg: 1 }}>
-           <ChartUserByCountry />
+           <ExpenseRank/>
         </Grid>
         <Grid size={{ md: 1, lg: 1 }}>
-        <SessionsChart />
+        <ExpenseLine/>
         </Grid>
       </Grid>
      
