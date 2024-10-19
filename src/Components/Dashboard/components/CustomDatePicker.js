@@ -27,7 +27,7 @@ function ButtonField(props) {
       aria-label={ariaLabel}
       size="small"
       onClick={() => setOpen?.((prev) => !prev)}
-      startIcon={<CalendarTodayRoundedIcon fontSize="small" />}
+      startIcon={<CalendarTodayRoundedIcon fontSize="big" />}
       sx={{ minWidth: 'fit-content' }}
     >
       {label ? `${label}` : 'Pick a date'}
@@ -54,7 +54,7 @@ ButtonField.propTypes = {
 };
 
 export default function CustomDatePicker() {
-  const [value, setValue] = React.useState(dayjs('2023-04-17'));
+  const [value, setValue] = React.useState(dayjs('2024-10-18'));
   const [open, setOpen] = React.useState(false);
 
   return (

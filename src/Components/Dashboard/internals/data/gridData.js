@@ -66,7 +66,7 @@ export function renderAvatar(params) {
         backgroundColor: params.value.color,
         width: '24px',
         height: '24px',
-        fontSize: '0.85rem',
+        fontSize: '20.15rem',
       }}
     >
       {params.value.name.toUpperCase().substring(0, 1)}

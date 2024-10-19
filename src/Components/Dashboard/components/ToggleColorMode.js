@@ -14,9 +14,9 @@ function ToggleColorMode({ mode, toggleColorMode, ...props }) {
       {...props}
     >
       {mode === 'dark' ? (
-        <WbSunnyRoundedIcon fontSize="small" />
+        <WbSunnyRoundedIcon fontSize="big" />
       ) : (
-        <ModeNightRoundedIcon fontSize="small" />
+        <ModeNightRoundedIcon fontSize="big" />
       )}
     </MenuButton>
   );
