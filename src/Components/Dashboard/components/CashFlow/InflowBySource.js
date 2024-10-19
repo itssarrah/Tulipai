@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useTheme } from "@mui/material/styles";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function InflowBySourceChart() {
   const theme = useTheme();
@@ -12,23 +13,32 @@ export default function InflowBySourceChart() {
 
   useEffect(() => {
     const fetchInflowsByCategories = async () => {
-      const response = await axios.get(
-        "http://localhost:8000/api/inflow-category",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          params: { date }, // Add any query params if needed
-        }
-      );
-      const data = await response.json();
-      setChartData(data);
+      const token = localStorage.getItem("token"); // Retrieve token inside useEffect
 
-      console.log(data);
+      if (!token) {
+        console.error("Token not found in localStorage.");
+        return;
+      }
+
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/api/inflow-category",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setChartData(response.data); // Axios directly provides JSON data
+
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching inflows data", error);
+      }
     };
 
     fetchInflowsByCategories();
-  }, []);
+  }, []); // Empty dependency array means this effect runs once, when the component mounts.
 
   const colorPalette = [
     (theme.vars || theme).palette.primary.dark,
