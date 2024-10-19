@@ -13,10 +13,12 @@ import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toast noti
 
 
 import EmployeeForm from "./Components/Employees/EmployeeForm.jsx";
-import SignupEmployee from "./Components/Employees/SignupEmployee.jsx";
 
+import SignupEmployee from "./Components/Employees/SignupEmployee.jsx";
+import Reports from './pages/Reports';
 import ExpensePage from "./Views/ExpensePage";
 import InflowPage from "./Views/InflowPage.jsx";
+
 
 function App() {
   return (
@@ -30,10 +32,12 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-employees" element={<EmployeeForm />} />
 
-          <Route path="/employee_signup/:token" element={<SignupEmployee />} />
 
+          <Route path="/employee_signup/:token" element={<SignupEmployee />} />
+          <Route path="/report" element={<Reports />} /> 
           <Route path="/expenses" element={<ExpensePage />} />
           <Route path="/income" element={<InflowPage />} />
+
 
         </Routes>
       </AppTheme>
