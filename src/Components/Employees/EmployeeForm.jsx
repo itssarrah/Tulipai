@@ -54,13 +54,19 @@ const EmployeeForm = () => {
     }
 
     try {
-      const response = await fetch("/invite-employee", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, role }),
-      });
+      const token = localStorage.getItem("token"); // Retrieve token from local storage
+      console.log(role);
+      const response = await fetch(
+        "http://localhost:8000/api/invite-employee",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+          body: JSON.stringify({ email, role }), // Include the email and role in the request body
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to invite employee");
