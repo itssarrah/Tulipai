@@ -11,6 +11,8 @@ import AppTheme from "./Components/shared-theme/AppTheme.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toast notifications
 
+import EmployeeForm from "./Components/Employees/EmployeeForm.jsx";
+
 function App() {
   return (
     <Router>
@@ -21,6 +23,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<SignIn />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/add-employees" element={<EmployeeForm />} />
         </Routes>
       </AppTheme>
       <ToastContainer />

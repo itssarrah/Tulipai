@@ -131,8 +131,12 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
       const responseData = await response.json();
 
-      // Store the token in local storage
+      // Store the token, account type, and role in local storage
       localStorage.setItem("token", responseData.token);
+      localStorage.setItem("account_type", responseData.account_type); // Store account type
+      if (responseData.account_type === "employee") {
+        localStorage.setItem("role", responseData.role); // Store role if it's an employee
+      }
 
       // Show success toast message
       toast.success("Login successful!", { autoClose: 3000 });
