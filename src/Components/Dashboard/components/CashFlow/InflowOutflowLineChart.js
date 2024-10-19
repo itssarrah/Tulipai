@@ -39,7 +39,7 @@ function getDaysInMonth(month, year) {
   return days;
 }
 
-export default function SessionsChart() {
+export default function InflowOutFlowLineChart() {
   const theme = useTheme();
   const data = getDaysInMonth(4, 2024);
 
@@ -53,7 +53,7 @@ export default function SessionsChart() {
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Sessions
+          Inflow Outflow Evolution
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -64,14 +64,8 @@ export default function SessionsChart() {
               gap: 1,
             }}
           >
-            <Typography variant="h4" component="p">
-              13,277
-            </Typography>
-            <Chip size="small" color="success" label="+35%" />
           </Stack>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Sessions per day for the last 30 days
-          </Typography>
+        
         </Stack>
         <LineChart
           colors={colorPalette}
@@ -84,8 +78,8 @@ export default function SessionsChart() {
           ]}
           series={[
             {
-              id: 'direct',
-              label: 'Direct',
+              id: 'Outflow',
+              label: 'Outflow',
               showMark: false,
               curve: 'linear',
               stack: 'total',
@@ -98,8 +92,8 @@ export default function SessionsChart() {
               ],
             },
             {
-              id: 'referral',
-              label: 'Referral',
+              id: 'Inflow',
+              label: 'Inflow',
               showMark: false,
               curve: 'linear',
               stack: 'total',
@@ -110,20 +104,6 @@ export default function SessionsChart() {
                 3500, 3800, 4100, 4400, 2900, 4700, 5000, 5300, 5600, 5900, 6200,
                 6500, 5600, 6800, 7100, 7400, 7700, 8000,
               ],
-            },
-            {
-              id: 'organic',
-              label: 'Organic',
-              showMark: false,
-              curve: 'linear',
-              stack: 'total',
-              stackOrder: 'ascending',
-              data: [
-                1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800, 2500,
-                3000, 3400, 3700, 3200, 3900, 4100, 3500, 4300, 4500, 4000, 4700,
-                5000, 5200, 4800, 5400, 5600, 5900, 6100, 6300,
-              ],
-              area: true,
             },
           ]}
           height={250}

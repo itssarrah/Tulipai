@@ -54,13 +54,19 @@ const EmployeeForm = () => {
     }
 
     try {
-      const response = await fetch("/invite-employee", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, role }),
-      });
+      const token = localStorage.getItem("token"); // Retrieve token from local storage
+      console.log(role);
+      const response = await fetch(
+        "http://localhost:8000/api/invite-employee",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+          body: JSON.stringify({ email, role }), // Include the email and role in the request body
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to invite employee");
@@ -71,7 +77,7 @@ const EmployeeForm = () => {
 
       // Redirect to /manager_employees after 3 seconds
       setTimeout(() => {
-        navigate("/manager_employees");
+        navigate("/dashboard");
       }, 3000);
     } catch (error) {
       console.error("Error inviting employee:", error);
@@ -88,6 +94,10 @@ const EmployeeForm = () => {
         <Typography variant="h5" gutterBottom>
           Invite Employee
         </Typography>
+        <h6 className="text-md text-gray-400">
+          (must be hosted to work currently works only with 1 email using
+          mailtrap/ or use log mail provider locally)
+        </h6>
         <Stack spacing={2}>
           <TextField
             label="Employee Email"
