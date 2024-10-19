@@ -16,7 +16,7 @@ import EmployeeForm from "./Components/Employees/EmployeeForm.jsx";
 import SignupEmployee from "./Components/Employees/SignupEmployee.jsx";
 
 import ExpensePage from "./Views/ExpensePage";
-import ProfitPage from "./Views/ProfitPage.jsx";
+import InflowPage from "./Views/InflowPage.jsx";
 
 function App() {
   return (
@@ -33,7 +33,7 @@ function App() {
           <Route path="/employee_signup/:token" element={<SignupEmployee />} />
 
           <Route path="/expenses" element={<ExpensePage />} />
-          <Route path="/income" element={<ProfitPage />} />
+          <Route path="/income" element={<InflowPage />} />
 
         </Routes>
       </AppTheme>
