@@ -10,8 +10,17 @@ const ExpensePage = () => {
   // Fetch expenses from the backend
   const fetchExpenses = async () => {
     try {
-      const response = await axios.get("/api/expenses"); // Replace with your API route
-      setExpenses(response.data);
+      const token = localStorage.getItem("token"); // Retrieve token from local storage
+      const response = await axios.get(
+        "http://127.0.0.1:8000/api/getOutflows",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Set the token in the headers
+          },
+        }
+      );
+      console.log(response.data);
+      setExpenses(response.data.outflows); // Adjust based on your API response structure
     } catch (error) {
       console.error("Error fetching expenses:", error);
     }
@@ -21,20 +30,17 @@ const ExpensePage = () => {
     fetchExpenses(); // Fetch expenses on load
   }, []);
 
-  const handleAddExpense = async (expense) => {
-    try {
-      const response = await axios.post("/api/expenses", expense); // Replace with your API route
-      setExpenses([...expenses, response.data]);
-    } catch (error) {
-      console.error("Error adding expense:", error);
-    }
+  // Function to handle form submission and update expenses state
+  const handleSubmit = (newExpense) => {
+    setExpenses((prevExpenses) => [...prevExpenses, newExpense]); // Add new expense to the existing list
   };
 
   return (
     <DashboardLayout>
       <div className="w-full max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold text-center my-4">Expense Tracker</h2>
-        <ExpenseForm onSubmit={handleAddExpense} />
+        <ExpenseForm onSubmit={handleSubmit} />{" "}
+        {/* Pass handleSubmit to ExpenseForm */}
         <ExpenseList expenses={expenses} />
       </div>
     </DashboardLayout>

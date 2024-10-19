@@ -1,6 +1,7 @@
 import React from "react";
 
 const ExpenseList = ({ expenses }) => {
+  console.log("list expenmses", expenses);
   return (
     <div className="mt-6">
       <h2 className="text-xl font-bold mb-4">Logged Expenses</h2>
@@ -18,10 +19,19 @@ const ExpenseList = ({ expenses }) => {
           {expenses.length > 0 ? (
             expenses.map((expense) => (
               <tr key={expense.id}>
-                <td className="px-4 py-2 border">{expense.name}</td>
-                <td className="px-4 py-2 border">{expense.category}</td>
+                <td className="px-4 py-2 border">
+                  {expense.outflow_name || expense.name}
+                </td>
+                <td className="px-4 py-2 border">
+                  {typeof expense.category === "string"
+                    ? expense.category
+                    : expense.category.name}
+                </td>{" "}
+                {/* Ensure category is rendered correctly */}
                 <td className="px-4 py-2 border">${expense.amount}</td>
-                <td className="px-4 py-2 border">{new Date(expense.date).toLocaleDateString()}</td>
+                <td className="px-4 py-2 border">
+                  {new Date(expense.date).toLocaleDateString()}
+                </td>
                 <td className="px-4 py-2 border">{expense.description}</td>
               </tr>
             ))
