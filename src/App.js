@@ -11,8 +11,13 @@ import AppTheme from "./Components/shared-theme/AppTheme.tsx";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import the CSS for toast notifications
 
+
 import EmployeeForm from "./Components/Employees/EmployeeForm.jsx";
 import SignupEmployee from "./Components/Employees/SignupEmployee.jsx";
+
+import ExpensePage from "./Views/ExpensePage";
+import ProfitPage from "./Views/ProfitPage.jsx";
+
 function App() {
   return (
     <Router>
@@ -24,7 +29,12 @@ function App() {
           <Route path="/login" element={<SignIn />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/add-employees" element={<EmployeeForm />} />
+
           <Route path="/employee_signup/:token" element={<SignupEmployee />} />
+
+          <Route path="/expenses" element={<ExpensePage />} />
+          <Route path="/income" element={<ProfitPage />} />
+
         </Routes>
       </AppTheme>
       <ToastContainer />
