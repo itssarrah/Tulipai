@@ -42,8 +42,15 @@ export default function InflowBySourceChart() {
 
   const colorPalette = [
     (theme.vars || theme).palette.primary.dark,
-    (theme.vars || theme).palette.primary.main,
-    (theme.vars || theme).palette.primary.light,
+    "#FF6B6B", // Red
+    "#6BFFB8", // Green
+    "#FFD93D", // Yellow
+    "#8B5CF6", // Purple
+    "#FF9F1C", // Orange
+    "#4ADE80", // Light Green
+    "#F472B6", // Pink
+    "#36CFC9", // Teal
+    "#A0AEC0", // Gray
   ];
 
   return (

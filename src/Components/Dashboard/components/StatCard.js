@@ -62,7 +62,7 @@ function StatCard({ title, value, trend }) {
         </Typography>
 
         {/* Number */}
-        <Typography variant="h2" component="p" sx={{ fontWeight: "bold" }}>
+        <Typography variant="h4" component="p" sx={{ fontWeight: "bold" }}>
           {value}
         </Typography>
 
