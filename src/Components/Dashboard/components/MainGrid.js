@@ -132,19 +132,13 @@ export default function MainGrid() {
         </Grid>
       </Grid>
 
-      <Typography component="h2" variant="h6" sx={{ mb: 2, fontSize: "30px" }}>
-        Profit
-      </Typography>
+      {/* <Typography component="h2" variant="h6" sx={{ mb: 2, fontSize: "30px" }}> */}
+      {/* Profit */}
+      {/* </Typography> */}
       <Grid container spacing={20} columns={3}>
-        <Grid size={{ md: 1, lg: 1 }}>
-          <ProfitChart />
-        </Grid>
-        <Grid size={{ md: 1, lg: 1 }}>
-          <TopUsers />
-        </Grid>
-        <Grid size={{ md: 1, lg: 1 }}>
-          <TopProducts />
-        </Grid>
+        {/* <Grid size={{ md: 1, lg: 1 }}><ProfitChart /></Grid> */}
+        <Grid size={{ md: 1, lg: 1 }}>{/* <TopUsers /> */}</Grid>
+        <Grid size={{ md: 1, lg: 1 }}>{/* <TopProducts /> */}</Grid>
 
         <Typography
           component="h2"
