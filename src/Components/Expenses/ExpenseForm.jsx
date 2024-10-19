@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { toast } from "react-toastify"; // Import toast
 
 const ExpenseForm = ({ onSubmit }) => {
   const [expense, setExpense] = useState({
@@ -9,27 +11,68 @@ const ExpenseForm = ({ onSubmit }) => {
     description: "",
   });
 
+  const [categories, setCategories] = useState([]); // State to store categories
+
+  // Fetch categories when the component mounts
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          "http://127.0.0.1:8000/api/outflow-categories"
+        );
+        setCategories(response.data); // Set categories from API response
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const handleChange = (e) => {
     setExpense({ ...expense, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(expense); // Send the new expense data to parent component
-    setExpense({
-      name: "",
-      category: "",
-      amount: "",
-      date: "",
-      description: "",
-    });
+    const token = localStorage.getItem("token"); // Get token from localStorage
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/outflow",
+        expense,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response.data);
+      onSubmit(expense); // Notify parent component
+      setExpense({
+        name: "",
+        category: "",
+        amount: "",
+        date: "",
+        description: "",
+      });
+      toast.success("Expense added successfully!"); // Add this line
+    } catch (error) {
+      console.error("Error adding expense:", error);
+      toast.error("Failed to add expense."); // Optionally, you can add an error toast
+    }
   };
 
   return (
-    <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit}>
+    <form
+      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+      onSubmit={handleSubmit}
+    >
       {/* Expense Name */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="name"
+        >
           Expense Name
         </label>
         <input
@@ -41,10 +84,13 @@ const ExpenseForm = ({ onSubmit }) => {
           required
         />
       </div>
-      
+
       {/* Category */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="category">
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="category"
+        >
           Category
         </label>
         <select
@@ -55,15 +101,20 @@ const ExpenseForm = ({ onSubmit }) => {
           required
         >
           <option value="">Select Category</option>
-          <option value="Travel">Travel</option>
-          <option value="Food">Food</option>
-          <option value="Supplies">Supplies</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.name}>
+              {cat.name}
+            </option>
+          ))}
         </select>
       </div>
 
       {/* Amount */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="amount">
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="amount"
+        >
           Amount
         </label>
         <input
@@ -78,7 +129,10 @@ const ExpenseForm = ({ onSubmit }) => {
 
       {/* Date */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="date"
+        >
           Date
         </label>
         <input
@@ -93,7 +147,10 @@ const ExpenseForm = ({ onSubmit }) => {
 
       {/* Description */}
       <div className="mb-4">
-        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="description">
+        <label
+          className="block text-gray-700 text-sm font-bold mb-2"
+          htmlFor="description"
+        >
           Description
         </label>
         <textarea
@@ -106,7 +163,7 @@ const ExpenseForm = ({ onSubmit }) => {
 
       <button
         type="submit"
-        style={{ backgroundColor: '#72E0D4'}} 
+        style={{ backgroundColor: "#72E0D4" }}
         className="hover:bg-green-600 text-gray-800  font-semibold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
       >
         Add Expense
